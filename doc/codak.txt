@@ -1,0 +1,18 @@
+*codak.txt* Plugin for knowing more about this function
+
+Author: Kunal Tyagi
+License: Same terms as vim (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+INTRODUCTION                                                *codak*
+
+Whenever you are editing a function in a git repository, a set of commands is
+defined that enable better search and git diff lookups
+
+COMMANDS                                                    *codak-commands*
+
+These commands are local to the buffers in which they work (generally, buffers
+that are part of Git repositories).
+
+TODO
