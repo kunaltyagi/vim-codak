@@ -1,18 +1,77 @@
 *codak.txt* Plugin for knowing more about this function
 
 Author: Kunal Tyagi
-License: Same terms as vim (see |license|)
+Copyright (C) 2016   Kunal Tyagi
+License: GPLv3
 
 This plugin is only available if 'compatible' is not set.
 
+=============================================================================
+CONTENTS                                                    *codak-contents*
+
+    1. Introduction..................|codak|
+    2. Mappings......................|codak-mapping|
+    3. Commands......................|codak-cmd|
+    4. License.......................|codak-license|
+    5. Bugs..........................|codak-bugs|
+    6. Contributing..................|codak-contrib|
+    7. Changelog.....................|codak-changelog|
+    8. Credits.......................|codak-credits|
+
+=============================================================================
 INTRODUCTION                                                *codak*
+                   ______             __          __
+                  / ____/ ____   ____/ / ____ _  / /__
+                 / /     / __ \ / __  / / __ `/ / //_/
+                / /___  / /_/ // /_/ / / /_/ / / ,<
+                \____/  \____/ \__,_/  \__,_/ /_/|_|
 
 Whenever you are editing a function in a git repository, a set of commands is
 defined that enable better search and git diff lookups
 
+=============================================================================
+MAPPINGS                                                    *codak-mapping*
+
+=============================================================================
 COMMANDS                                                    *codak-commands*
 
 These commands are local to the buffers in which they work (generally, buffers
 that are part of Git repositories).
 
-TODO
+=============================================================================
+LICENSE                                                     *codak-license*
+
+Codak is under GPLv3 license. The complete license disclaimer follows:
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=============================================================================
+BUGS                                                        *codak-bugs*
+
+-----------------------------------------------------------------------------
+TODO List
+
+-----------------------------------------------------------------------------
+Known Bugs
+
+=============================================================================
+CONTRIBUTING                                                *codak-contrib*
+
+=============================================================================
+CHANGELOG                                                   *codak-changelog*
+
+=============================================================================
+CREDITS                                                     *codak-credits*
+
+Kunal Tyagi  <kunaltyagi@protonmail.com>

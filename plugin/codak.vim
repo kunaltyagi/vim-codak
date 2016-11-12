@@ -16,28 +16,37 @@ endif
 
 " set as 1 for developing, more verbose messages, etc.
 let g:debug_codak = 1
+let s:msg_header_codak = '[codak]: '
 
 if exists('g:debug_codak') && g:debug_codak
-  execute 'call s:message("In Debug Mode")'
+  echom s:msg_header_codak."In Debug Mode"
   " Allow running again and again
   unlet g:loaded_codak
 endif
 "}}}
 
 " Section: Utility {{{
-
-" Adds header to better detect error messages
 function! s:error(msg) abort "{{{
-  let v:errmsg = '[codak]: '.a:msg
+  " Adds header to error messages
+  let v:errmsg = s:msg_header_codak.a:msg
   throw v:errmsg
 endfunction
 "}}}
 
 function! s:message(msg) "{{{
-  echom '[codak]: '.a:msg
+  " Adds header to normal messages
+  echom s:msg_header_codak.a:msg
 endfunction
 "}}}
 
+function! codak#license() "{{{
+  " Prints the license
+  echom "Codak Copyright (C) 2016 Kunal Tyagi"
+  echom "This program comes with ABSOLUTELY NO WARRANTY;"
+  echom "This is free software, and you are welcome to redistribute it".
+      \ "under certain conditions as specified under GPLv3"
+endfunction
+"}}}
 "}}}
 
 " Section: Initialization {{{
@@ -51,6 +60,16 @@ endfunction
 "}}}
 "}}}
 
-" Mode Line{{{
+" Section: Search {{{
+" Use Ack plugin to search for terms
+runtime Ack
+
+function! codak#search_standalone(fn)
+  execute('Ack '.a:str)
+  return '0'
+endfunction
+" }}}
+
+" Mode Line {{{
 " vim:tabstop=2 shiftwidth=2 foldmethod=marker:foldlevel=1
 " }}}
