@@ -15,10 +15,10 @@ if !exists('g:codak_vcs_executable')
 endif
 
 " set as 1 for developing, more verbose messages, etc.
-let g:testing_codak = 1
+let g:debug_codak = 1
 
-if exists('g:testing_codak') && g:testing_codak
-  echom "Codak testing"
+if exists('g:debug_codak') && g:debug_codak
+  execute 'call s:message("In Debug Mode")'
   " Allow running again and again
   unlet g:loaded_codak
 endif
@@ -26,11 +26,18 @@ endif
 
 " Section: Utility {{{
 
-function! s:trial(msg) abort "{{{
-  let v:errmsg = 'fugitive: '.a:msg
+" Adds header to better detect error messages
+function! s:error(msg) abort "{{{
+  let v:errmsg = '[codak]: '.a:msg
   throw v:errmsg
 endfunction
 "}}}
+
+function! s:message(msg) "{{{
+  echom '[codak]: '.a:msg
+endfunction
+"}}}
+
 "}}}
 
 " Section: Initialization {{{
