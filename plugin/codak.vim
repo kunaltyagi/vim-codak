@@ -53,9 +53,9 @@ endfunction
 " Use Ack plugin to search for terms
 runtime Ack
 " Use Ack! to not jump immediately to first search
-let s:search_codak_exe = 'Ack!'
+let g:search_codak_exe = 'Ack!'
 " Only search for words, and ignore the tag file, if any
-let s:search_codak_option = ['-w', '--ignore-file=is:tags']
+let g:search_codak_option = ['-w', '--ignore-file=is:tags']
 "}}}
 
 " Section: Search {{{
@@ -63,7 +63,7 @@ let s:search_codak_option = ['-w', '--ignore-file=is:tags']
 " Current hack: no sematic search, simple ack
 function! codak#search_standalone(str) "{{{
   " Searches for all possible mention of str
-  let l:exec_str = s:search_codak_exe.' '.join(s:search_codak_option)
+  let l:exec_str = g:search_codak_exe.' '.join(g:search_codak_option)
   execute(l:exec_str.' '.a:str)
   return '0'
 endfunction
