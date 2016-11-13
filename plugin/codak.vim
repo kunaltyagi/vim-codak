@@ -54,17 +54,16 @@ endfunction
 runtime Ack
 " Use Ack! to not jump immediately to first search
 let g:search_codak_exe = 'Ack!'
-" Only search for words, and ignore the tag file, if any
-let g:search_codak_option = ['-w', '--ignore-file=is:tags']
+" Only search for words, literally, and ignore the tag file, if any
+let g:search_codak_option = ['-w', '-Q', '--ignore-file=is:tags']
 "}}}
 
 " Section: Search {{{
-
 " Current hack: no sematic search, simple ack
 function! codak#search_standalone(str) "{{{
   " Searches for all possible mention of str
   let l:exec_str = g:search_codak_exe.' '.join(g:search_codak_option)
-  execute(l:exec_str.' '.a:str)
+  execute(l:exec_str." '".a:str."'")
   return '0'
 endfunction
 "}}}
@@ -72,11 +71,30 @@ endfunction
 
 " Section: Function {{{
 function! codak#get_func_name() "{{{
-  " See ctags.vim
+  " Get the function name
+  let l:cursor = getpos(".")
+  " See ctags.vim. This implementation is a hack
   " https://github.com/vim-scripts/ctags.vim/blob/master/plugin/ctags.vim#L97
-  return ''
+  let l:result =  getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
+  call setpos(".", l:cursor)
+  return l:result
 endfunction
 "}}}
+"}}}
+
+" Section: Commands {{{
+function! Codak() "{{{
+  " manually replace vim special characters
+  let l:func_name = substitute(codak#get_func_name(), '[#|%]', '\\\0', 'g')
+  return codak#search_standalone(l:func_name)
+endfunction
+"}}}
+"}}}
+
+" Section: Mappings {{{
+nnoremap <F9> :call Codak()<CR>
+" This one has issue. Doesn't go back in insert mode
+inoremap <F9> <Esc>:call Codak()<CR>
 "}}}
 
 " Mode Line {{{
