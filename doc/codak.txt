@@ -67,7 +67,8 @@ TODO List
 -----------------------------------------------------------------------------
 Known Bugs
 
-* Can't know the current function name on its own
+* Crude and bad method to detect function name
+* Mapping in insert mode doesn't conserve the mode
 
 =============================================================================
 CONTRIBUTING                                                *codak-contrib*
