@@ -72,6 +72,8 @@ endfunction
 
 " Section: Function {{{
 function! codak#get_func_name() "{{{
+  " See ctags.vim
+  " https://github.com/vim-scripts/ctags.vim/blob/master/plugin/ctags.vim#L97
   return ''
 endfunction
 "}}}
