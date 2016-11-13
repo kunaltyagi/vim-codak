@@ -62,8 +62,12 @@ BUGS                                                        *codak-bugs*
 -----------------------------------------------------------------------------
 TODO List
 
+* Move away from Ack to a semantic search (look into YCM)
+
 -----------------------------------------------------------------------------
 Known Bugs
+
+* Can't know the current function name on its own
 
 =============================================================================
 CONTRIBUTING                                                *codak-contrib*
