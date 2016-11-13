@@ -50,26 +50,33 @@ endfunction
 "}}}
 
 " Section: Initialization {{{
-
-function! codak#is_vcs_dir(path) abort "{{{
-  let path = s:sub(a:path, '[\/]$', '') . '/'
-  return getfsize(path.'HEAD') > 10 && (
-    \ isdirectory(path.'objects') && isdirectory(path.'refs') ||
-    \ getftype(path.'commondir') ==# 'file')
-endfunction
-"}}}
+" Use Ack plugin to search for terms
+runtime Ack
+" Use Ack! to not jump immediately to first search
+let s:search_codak_exe = 'Ack!'
+" Only search for words, and ignore the tag file, if any
+let s:search_codak_option = ['-w', '--ignore-file=is:tags']
 "}}}
 
 " Section: Search {{{
-" Use Ack plugin to search for terms
-runtime Ack
 
-function! codak#search_standalone(fn)
-  execute('Ack '.a:str)
+" Current hack: no sematic search, simple ack
+function! codak#search_standalone(str) "{{{
+  " Searches for all possible mention of str
+  let l:exec_str = s:search_codak_exe.' '.join(s:search_codak_option)
+  execute(l:exec_str.' '.a:str)
   return '0'
 endfunction
-" }}}
+"}}}
+"}}}
+
+" Section: Function {{{
+function! codak#get_func_name() "{{{
+  return ''
+endfunction
+"}}}
+"}}}
 
 " Mode Line {{{
 " vim:tabstop=2 shiftwidth=2 foldmethod=marker:foldlevel=1
-" }}}
+"}}}
