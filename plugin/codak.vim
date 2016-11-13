@@ -47,11 +47,19 @@ function! codak#license() "{{{
       \ "under certain conditions as specified under GPLv3"
 endfunction
 "}}}
+
+function! codak#quoteescape(str) "{{{
+  return "'".a:str."'"
+endfunction
+"}}}
+
+function! codak#vimescape(str) "{{{
+  return substitute(a:str, '[#|%]', '\\\0', 'g')
+endfunction
+"}}}
 "}}}
 
 " Section: Initialization {{{
-" Use Ack plugin to search for terms
-runtime Ack
 " Use Ack! to not jump immediately to first search
 let g:search_codak_exe = 'Ack!'
 " Only search for words, literally, and ignore the tag file, if any
@@ -63,13 +71,24 @@ let g:search_codak_option = ['-w', '-Q', '--ignore-file=is:tags']
 function! codak#search_standalone(str) "{{{
   " Searches for all possible mention of str
   let l:exec_str = g:search_codak_exe.' '.join(g:search_codak_option)
-  execute(l:exec_str." '".a:str."'")
+  execute(l:exec_str.' '.codak#quoteescape(a:str))
   return '0'
 endfunction
 "}}}
 "}}}
 
-" Section: Function {{{
+" Section: Git {{{
+" Current hack: simple git log. Prefer vim-fugitive
+function! codak#git_log(fn_name, file_name) "{{{
+  let l:fn_name = codak#quoteescape(a:fn_name)
+  " echom "!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name)
+  " echom shellescape("!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name))
+  " execute("!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name))
+endfunction
+"}}}
+"}}}
+
+" Section: GetDetails {{{
 function! codak#get_func_name() "{{{
   " Get the function name
   let l:cursor = getpos(".")
@@ -80,13 +99,17 @@ function! codak#get_func_name() "{{{
   return l:result
 endfunction
 "}}}
+
+function! codak#get_file_name() "{{{
+  return 'plugin/codak.vim'
+endfunction
+"}}}
 "}}}
 
 " Section: Commands {{{
 function! Codak() "{{{
   " manually replace vim special characters
-  let l:func_name = substitute(codak#get_func_name(), '[#|%]', '\\\0', 'g')
-  return codak#search_standalone(l:func_name)
+  return codak#search_standalone(codak#vimescape(codak#get_func_name()))
 endfunction
 "}}}
 "}}}
