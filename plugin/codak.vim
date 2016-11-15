@@ -47,6 +47,12 @@ function! codak#vimescape(str) "{{{
   return substitute(a:str, '[#|%|!]', '\\\0', 'g')
 endfunction
 "}}}
+
+function! codak#check_vcs() "{{{
+  let l:output = system('git status')
+  return !v:shell_error
+endfunction
+"}}}
 "}}}
 
 " Section: Debug {{{
@@ -97,10 +103,21 @@ endfunction
 " Current hack: simple git log. Prefer vim-fugitive
 function! codak#git_log(fn_name, file_name) "{{{
   let l:fn_name = codak#quoteescape(a:fn_name)
-  let l:str = "!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name)
-  call s:Debug("Gitlog calling '".l:str."'")
-  execute(l:str)
-  " echom shellescape("!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name))
+  " save current directory
+  let l:saved_dir = system("pwd")
+  " Switch to this file's directory
+  execute("lcd %:p:h")
+  if codak#check_vcs()
+    " Do git log magic
+    echom system("pwd")
+    let l:str = "!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name)
+    call s:Debug("Gitlog calling '".l:str."'")
+    execute(l:str)
+  else
+    call s:Debug("No recognised rcs found to find diff logs")
+  endif
+  " Switch back
+  execute("lcd ".l:saved_dir)
 endfunction
 "}}}
 "}}}
@@ -119,11 +136,40 @@ endfunction
 "}}}
 
 function! codak#get_file_name() "{{{
-  let l:result = expand("%:p")
-  " let l:output = system("git rev-parse --show-toplevel")
-  " l:output = substitute("sdsdsl:output", "\n", "p", "g")
-  call s:Debug("file_name found as '".l:result."'")
-  " call s:Debug("git root dir '".l:output."'")
+  " Get just the file name
+  let l:result = expand('%:t')
+  call s:Debug("file_name is '".l:result."'")
+  return l:result
+endfunction
+"}}}
+
+function! codak#get_vcs_root_relative_file_name() "{{{
+  " Find the complete path of this file wrt the rcs root
+  let l:full_path = expand("%:p")
+  " Save the present directory
+  let l:saved_dir = system("pwd")
+  " Switch to this file's directory
+  execute("lcd %:p:h")
+  " Find the git root
+  let l:output = substitute(system("git rev-parse --show-toplevel"),
+        \ '\n$', '', '')
+  if v:shell_error
+    let l:output = ""
+    call s:Debug("File not under any recognised rcs")
+  else
+    call s:Debug("Git root dir: '".l:output."'")
+  endif
+  " Switch back
+  execute("lcd ".l:saved_dir)
+  if !v:shell_error
+    " Remove the git root from the complete file path
+    let l:file_name = substitute(l:full_path, l:output, '', '')
+    " Sanitise the file name
+    let l:result = substitute(l:file_name, '\v^.', '', '')
+  else
+    let l:result = ''
+  endif
+  call s:Debug("file_name under rcs found as '".l:result."'")
   return l:result
 endfunction
 "}}}
