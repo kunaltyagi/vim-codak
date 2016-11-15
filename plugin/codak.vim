@@ -13,16 +13,6 @@ let g:loaded_codak = 1
 if !exists('g:codak_vcs_executable')
   let g:codak_vcs_executable = 'git'
 endif
-
-" set as 1 for developing, more verbose messages, etc.
-let g:debug_codak = 1
-let s:msg_header_codak = '[codak]: '
-
-if exists('g:debug_codak') && g:debug_codak
-  echom s:msg_header_codak."In Debug Mode"
-  " Allow running again and again
-  unlet g:loaded_codak
-endif
 "}}}
 
 " Section: Utility {{{
@@ -54,9 +44,33 @@ endfunction
 "}}}
 
 function! codak#vimescape(str) "{{{
-  return substitute(a:str, '[#|%]', '\\\0', 'g')
+  return substitute(a:str, '[#|%|!]', '\\\0', 'g')
 endfunction
 "}}}
+"}}}
+
+" Section: Debug {{{
+" set as 1 for developing, more verbose messages, etc.
+let g:debug_codak = 1
+let s:msg_header_codak = '[codak]: '
+
+function! codak#debug(msg) "{{{
+  call s:message(a:msg)
+endfunction
+"}}}
+
+function! codak#nodebug(msg) "{{{
+endfunction
+"}}}
+
+if exists('g:debug_codak') && g:debug_codak
+  let s:Debug = function("codak#debug")
+  unlet g:loaded_codak
+else
+  let s:Debug = function("codak#nodebug")
+endif
+
+call s:Debug("In Debug Mode")
 "}}}
 
 " Section: Initialization {{{
@@ -71,7 +85,9 @@ let g:search_codak_option = ['-w', '-Q', '--ignore-file=is:tags']
 function! codak#search_standalone(str) "{{{
   " Searches for all possible mention of str
   let l:exec_str = g:search_codak_exe.' '.join(g:search_codak_option)
-  execute(l:exec_str.' '.codak#quoteescape(a:str))
+  let l:call_str = l:exec_str.' '.codak#quoteescape(a:str)
+  call s:Debug("Standalone calling '".l:call_str."'")
+  execute(l:call_str)
   return '0'
 endfunction
 "}}}
@@ -81,9 +97,10 @@ endfunction
 " Current hack: simple git log. Prefer vim-fugitive
 function! codak#git_log(fn_name, file_name) "{{{
   let l:fn_name = codak#quoteescape(a:fn_name)
-  " echom "!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name)
+  let l:str = "!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name)
+  call s:Debug("Gitlog calling '".l:str."'")
+  execute(l:str)
   " echom shellescape("!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name))
-  " execute("!git log -L :".codak#vimescape(l:fn_name.':'.a:file_name))
 endfunction
 "}}}
 "}}}
@@ -96,12 +113,16 @@ function! codak#get_func_name() "{{{
   " https://github.com/vim-scripts/ctags.vim/blob/master/plugin/ctags.vim#L97
   let l:result =  getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
   call setpos(".", l:cursor)
+  call s:Debug("func_name found as '".l:result."'")
   return l:result
 endfunction
 "}}}
 
 function! codak#get_file_name() "{{{
-  return 'plugin/codak.vim'
+  let l:result = 'plugin/codak.vim'
+  " TODO
+  call s:Debug("file_name found as '".l:result."'")
+  return l:result
 endfunction
 "}}}
 "}}}
@@ -116,8 +137,8 @@ endfunction
 
 " Section: Mappings {{{
 nnoremap <F9> :call Codak()<CR>
-" This one has issue. Doesn't go back in insert mode
-inoremap <F9> <Esc>:call Codak()<CR>
+" This one has issue. Doesn't go back in insert mode. Commented is better
+" inoremap <F9> <Esc>:call Codak()<CR>
 "}}}
 
 " Mode Line {{{
