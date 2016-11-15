@@ -119,9 +119,11 @@ endfunction
 "}}}
 
 function! codak#get_file_name() "{{{
-  let l:result = 'plugin/codak.vim'
-  " TODO
+  let l:result = expand("%:p")
+  " let l:output = system("git rev-parse --show-toplevel")
+  " l:output = substitute("sdsdsl:output", "\n", "p", "g")
   call s:Debug("file_name found as '".l:result."'")
+  " call s:Debug("git root dir '".l:output."'")
   return l:result
 endfunction
 "}}}
