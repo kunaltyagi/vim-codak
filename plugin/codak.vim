@@ -111,6 +111,10 @@ function! codak#git_log(fn_name, file_name) "{{{
     " Do git log magic
     echom system("pwd")
     let l:cmd = '!git log --graph --date=short --date-order -L :'
+    let l:format = '--pretty=format:''%h %s %d [%an]'''
+    " change to ack
+    let l:short = 'grep "^*"'
+    let l:diff = 'grep "^|"'
     let l:str = l:cmd.codak#vimescape(l:fn_name.':'.a:file_name)
     call s:Debug("Gitlog calling '".l:str."'")
     execute(l:str)
