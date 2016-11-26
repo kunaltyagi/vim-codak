@@ -3,8 +3,14 @@
 " Version:          0.0.1
 " GetLatestVimScripts: XXX 1 :AutoInstall: codak.vim
 
-" Section: FileType {{{
-au BufNewFile,BufRead *.gitlog set filetype=gitlog
+" Section: Init {{{
+if exists("b:current_syntax")
+  finish
+endif
+
+echom "Gitlog file syntax highlight"
+
+let b:current_syntax = "gitlog"
 "}}}
 
 " Mode Line {{{

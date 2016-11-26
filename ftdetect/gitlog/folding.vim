@@ -3,8 +3,9 @@
 " Version:          0.0.1
 " GetLatestVimScripts: XXX 1 :AutoInstall: codak.vim
 
-" Section: FileType {{{
-au BufNewFile,BufRead *.gitlog set filetype=gitlog
+" Section: Folding {{{
+setlocal foldmethod=indent
+setlocal foldignore=
 "}}}
 
 " Mode Line {{{
