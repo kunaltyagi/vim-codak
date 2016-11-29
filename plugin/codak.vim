@@ -101,33 +101,35 @@ endfunction
 
 " Section: Git {{{
 " Current hack: simple git log. Prefer vim-fugitive
-function! codak#git_log(fn_name, file_name) "{{{
+function! codak#git_log_command(fn_name, file_name) "{{{
   let l:fn_name = codak#quoteescape(a:fn_name)
   " save current directory
   let l:saved_dir = system("pwd")
   " Switch to this file's directory
   execute("lcd %:p:h")
+  let l:str = ''
   if codak#check_vcs()
     " Do git log magic
     echom system("pwd")
     let l:cmd = '!git log --graph --date=short --date-order -L :'
-    let l:format = '--pretty=format:''%h %s %d [%an]'''
+    let l:format = '--pretty=format:''%h %ad %s %d [%an]'''
     " change to ack
     let l:short = 'grep "^*"'
     let l:diff = 'grep "^|"'
     let l:str = l:cmd.codak#vimescape(l:fn_name.':'.a:file_name)
     call s:Debug("Gitlog calling '".l:str."'")
-    execute(l:str)
   else
     call s:Debug("No recognised rcs found to find diff logs")
   endif
   " Switch back
   execute("lcd ".l:saved_dir)
+  call s:Debug('Returning '.l:str)
+  return l:str
 endfunction
 "}}}
 "}}}
 
-" Section: GetDetails {{{
+" Section: Get Details {{{
 function! codak#get_func_name() "{{{
   " Get the function name
   let l:cursor = getpos(".")
@@ -180,10 +182,27 @@ endfunction
 "}}}
 "}}}
 
+" Section: Buffers {{{
+function! codak#create_scratch_buffer(command) "{{{
+  " TODO: ERROR HERE, a:command is 0
+  " Creates a new buffer in horizontal split with the output of 'command'
+  call s:Debug(a:command)
+  l:boilerplate = 'new | r '.a:command
+  execute(l:boilerplate)
+endfunction
+"}}}
+"}}}
+
 " Section: Commands {{{
 function! Codak() "{{{
-  " manually replace vim special characters
+  " finds all mention of the function at current cursor position
   return codak#search_standalone(codak#vimescape(codak#get_func_name()))
+endfunction
+"}}}
+
+function! CodakGit() "{{{
+  " finds all git history mentions of function at current position
+  return codak#create_scratch_buffer(codak#git_log_command(codak#get_func_name(), codak#get_file_name()))
 endfunction
 "}}}
 "}}}
