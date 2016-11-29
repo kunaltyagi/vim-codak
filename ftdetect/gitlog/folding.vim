@@ -4,8 +4,20 @@
 " GetLatestVimScripts: XXX 1 :AutoInstall: codak.vim
 
 " Section: Folding {{{
-setlocal foldmethod=indent
-setlocal foldignore=
+setlocal foldmethod=expr
+setlocal foldexpr=GetGitlogFold(v:lnum)
+"}}}
+
+" Section: Fold the text {{{
+function! GetGitlogFold(v:lnum)
+  " returns the fold level of the line
+  if getline(a:lnum) =~? '\v^\s*$'
+    " ensure that a blank line is given the least preference for folding
+    return '-1'
+  endif
+
+  return '0'
+endfunction
 "}}}
 
 " Mode Line {{{
