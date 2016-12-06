@@ -9,16 +9,24 @@ setlocal foldexpr=GetGitlogFold(v:lnum)
 "}}}
 
 " Section: Fold the text {{{
-function! GetGitlogFold(v:lnum)
+function! GetGitlogFold(lnum)
   " returns the fold level of the line
-  l:line = getline(a:lnum)
+  let l:line = getline(a:lnum)
   if l:line =~? '\v^\s*$'
     " ensure that a blank line is given the least preference for folding
     return '-1'
-  elseif l:line =~? '\v^\*[\s\S]*$'
-    " a line contains * in the beginning, this is a commit :D
+  elseif l:line =~? '\v^\*[\s\S]*'
+    " a line contains * in the beginning (commit)
     return '1'
-  elseif return '2'
+  elseif l:line =~? '\v^\|[\s\|\/\\]*(Author|Date):[\s\S]*'
+    " a line contains Author or Date details so can be unfolded slightly
+    return '2'
+  " elseif l:line =~? '\v^[\s\|\/\\]*$'
+  "   " a line contains |, \, / and spaces and nothing else (commit tree)
+  "   return '-1'
+  " elseif l:line =~? '\v^\|[\s\S]*$'
+  "   " a line contains | in the beginning (commit message)
+  "   return '3'
   endif
 
   return '0'
